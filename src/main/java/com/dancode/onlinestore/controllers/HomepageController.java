@@ -8,9 +8,12 @@ import com.dancode.onlinestore.services.ProductCategoriesService;
 import com.dancode.onlinestore.services.ProductService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -30,6 +33,12 @@ public class HomepageController {
     @GetMapping("/deals_of_the_day/{number_of_products}")
     public ProductWrapper getDealProducts(@PathVariable("number_of_products") Long number_of_products){
         ProductWrapper products = new ProductWrapper(productService.getDealProducts(number_of_products));
+        return products;
+    }
+
+    @GetMapping("/products")
+    public ProductWrapper getProductsByCategory(@RequestParam String category){
+        ProductWrapper products = new ProductWrapper(productService.getProductsByCategory(category));
         return products;
     }
     

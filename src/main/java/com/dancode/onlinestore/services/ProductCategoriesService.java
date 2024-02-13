@@ -20,7 +20,7 @@ public class ProductCategoriesService {
                                 .map(e->e.getName())
                                 .collect(Collectors.toList())
                                 .toString();
-        return categoriesNames.substring(0, categoriesNames.length()-1);
+        return categoriesNames.substring(1, categoriesNames.length()-1);
     }
 
 }

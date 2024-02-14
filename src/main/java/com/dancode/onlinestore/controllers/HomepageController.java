@@ -36,9 +36,15 @@ public class HomepageController {
         return products;
     }
 
-    @GetMapping("/products")
+    @GetMapping("/products/{category}")
     public ProductWrapper getProductsByCategory(@RequestParam String category){
         ProductWrapper products = new ProductWrapper(productService.getProductsByCategory(category));
+        return products;
+    }
+
+    @GetMapping("/products")
+    public ProductWrapper getAllProducts(){
+        ProductWrapper products = new ProductWrapper(productService.getAllProducts());
         return products;
     }
     

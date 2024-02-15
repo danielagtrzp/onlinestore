@@ -5,13 +5,13 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dancode.onlinestore.repositories.ProductCategoriesRepository;
+import com.dancode.onlinestore.repositories.ProductCategoryRepository;
 
 @Service
-public class ProductCategoriesService {
+public class ProductCategoryService {
 
     @Autowired
-    private ProductCategoriesRepository productCategoriesRepository;
+    private ProductCategoryRepository productCategoriesRepository;
 
     public String getAllCategoriesNames(){
         String categoriesNames = productCategoriesRepository

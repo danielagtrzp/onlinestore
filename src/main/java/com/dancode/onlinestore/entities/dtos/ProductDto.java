@@ -1,16 +1,16 @@
-package com.dancode.onlinestore.entities.wrappers;
+package com.dancode.onlinestore.entities.dtos;
 
 import java.util.List;
 
 import com.dancode.onlinestore.entities.Product;
 
-public class ProductWrapper {
+public class ProductDto {
 
     private List<Product> products;
 
     
 
-    public ProductWrapper(List<Product> products) {
+    public ProductDto(List<Product> products) {
         this.products = products;
     }
 

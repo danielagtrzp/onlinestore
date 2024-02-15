@@ -7,17 +7,17 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "PRODUCT_CATEGORIES")
-public class ProductCategories {
+public class ProductCategory {
 
     @Id
     @GeneratedValue
     private Long id;
     private String name;
 
-    public ProductCategories() {
+    public ProductCategory() {
     }
 
-    public ProductCategories(Long id, String name) {
+    public ProductCategory(Long id, String name) {
         this.id = id;
         this.name = name;
     }

@@ -20,8 +20,8 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
-    public String processOrders(PurchaseDto purchaseDto) throws Exception {
-        
+    public void processOrders(PurchaseDto purchaseDto) throws Exception {
+    
         for (ProductInfo productInfo : purchaseDto.getProducts()) {
             Order order = new Order();
             order.setFirstName(purchaseDto.getFirstName());
@@ -39,15 +39,8 @@ public class OrderService {
             
             Product product = optionaProduct.get();
             order.setProduct(product);
-            createOrder(order);
+            orderRepository.save(order);
+        
         }
-
-        return "success";
     }
-
-    private void createOrder(Order order) {
-
-        orderRepository.save(order);
-    }
-
 }

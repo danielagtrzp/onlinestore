@@ -2,12 +2,17 @@ package com.dancode.onlinestore.entities.dtos;
 
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class PurchaseDto {
 
+    @NotBlank(message ="First name is missing")
     private String firstName;
+    @NotBlank(message ="Last name is missing")
     private String lastName;
     private String email;
     private String shippingAddress;
+    @NotBlank(message ="Credit card information is missing")
     private String creditCard;
     private List<ProductInfo> products;
 

@@ -10,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dancode.onlinestore.entities.dtos.PurchaseDto;
-import com.dancode.onlinestore.exceptions.CreditCardValidationException;
 import com.dancode.onlinestore.services.CreditCardValidationService;
 import com.dancode.onlinestore.services.OrderService;
 import jakarta.validation.Valid;

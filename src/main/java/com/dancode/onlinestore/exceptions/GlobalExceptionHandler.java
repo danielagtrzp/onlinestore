@@ -1,27 +1,23 @@
 package com.dancode.onlinestore.exceptions;
 
-import java.util.stream.Collectors;
-
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public CustomErrorDetails argumentNotValid(MethodArgumentNotValidException ex, WebRequest request){
-        var errors = ex.getAllErrors().stream().map(e->e.getDefaultMessage()).collect(Collectors.toList()).toString();
-        return new CustomErrorDetails(errors);
+    @ExceptionHandler(GeneralCustomApplicationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public CustomErrorDetails argumentNotValid(GeneralCustomApplicationException ex, WebRequest request){
+        var errorsMessage = ex.getMessage();
+        var stackTrace = ex.getStackTrace();
+        var uri = ((ServletWebRequest) request).getRequest().getRequestURI();
+        return new CustomErrorDetails(uri,errorsMessage,stackTrace);
     }
-
-
-    // @ExceptionHandler(ConstraintViolationException.class)
-    // public CustomErrorDetails contrainViolationException(ConstraintViolationException ex, WebRequest request){
-    //     var errors = ex.getConstraintViolations().stream().map(e->e.getMessage()).collect(Collectors.toList()).toString();
-    //     return new CustomErrorDetails(errors);
-    // }
 
 }

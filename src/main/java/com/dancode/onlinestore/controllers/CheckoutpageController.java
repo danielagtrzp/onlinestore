@@ -10,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dancode.onlinestore.entities.dtos.PurchaseDto;
+import com.dancode.onlinestore.exceptions.CreditCardValidationException;
+import com.dancode.onlinestore.services.CreditCardValidationService;
 import com.dancode.onlinestore.services.OrderService;
 import jakarta.validation.Valid;
 
@@ -22,6 +24,9 @@ public class CheckoutpageController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private CreditCardValidationService cardValidationService;
 
     @PostMapping("/checkout")
     public ResponseEntity<List<String>> createOrder(@Valid @RequestBody PurchaseDto purchaseDto, BindingResult result) {
@@ -37,10 +42,12 @@ public class CheckoutpageController {
         }
 
         try {
+            cardValidationService.validate(purchaseDto.getCreditCard());
             orderService.processOrders(purchaseDto);
         } catch (Exception e) {
-            e.printStackTrace();
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(List.of(e.getMessage()));
         }
+        
         return ResponseEntity.status(HttpStatus.OK).body(List.of("success"));
        
     }

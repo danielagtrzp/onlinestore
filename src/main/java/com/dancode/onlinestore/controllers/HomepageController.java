@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dancode.onlinestore.entities.Product;
 import com.dancode.onlinestore.entities.dtos.ProductDto;
-import com.dancode.onlinestore.exceptions.CustomErrorDetails;
 import com.dancode.onlinestore.exceptions.GeneralCustomApplicationException;
 import com.dancode.onlinestore.services.ProductCategoryService;
 import com.dancode.onlinestore.services.ProductService;
@@ -12,14 +11,10 @@ import com.dancode.onlinestore.services.ProductService;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 
 @RestController
@@ -35,7 +30,7 @@ public class HomepageController {
     public String getAllCategoriesName() throws GeneralCustomApplicationException {
         
         String allCategoriesNames = productCategoriesService.getAllCategoriesNames();
-        if (allCategoriesNames.isEmpty()) {
+        if (allCategoriesNames.isBlank()) {
             throw new GeneralCustomApplicationException("any categories name is present");
         }
         return allCategoriesNames;

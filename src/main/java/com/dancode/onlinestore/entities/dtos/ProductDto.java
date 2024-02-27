@@ -22,6 +22,9 @@ public class ProductDto {
         this.products = products;
     }
 
-    
+    @Override
+    public String toString() {
+        return "ProductDto [products=" + products + "]";
+    }
 
 }

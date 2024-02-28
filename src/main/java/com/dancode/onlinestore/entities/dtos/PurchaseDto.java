@@ -21,6 +21,12 @@ public class PurchaseDto {
         private Long productId;
         private Long quantity;
 
+        
+
+        public ProductInfo(Long productId, Long quantity) {
+            this.productId = productId;
+            this.quantity = quantity;
+        }
         public Long getProductId() {
             return productId;
         }

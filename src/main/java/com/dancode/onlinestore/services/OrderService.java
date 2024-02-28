@@ -31,8 +31,10 @@ public class OrderService {
     @Value("${products.service.max-number-of-items:25}")
     private Long maxNumberOfOrders;
 
-    public void processOrders(PurchaseDto purchaseDto) throws Exception{
+    public void processOrders(PurchaseDto purchaseDto) throws GeneralCustomApplicationException{
     
+        if(purchaseDto.getProducts()==null)
+            throw new GeneralCustomApplicationException("this product list is empty");
         for (ProductInfo productInfo : purchaseDto.getProducts()) {
             Order order = new Order();
             order.setFirstName(purchaseDto.getFirstName());
@@ -50,7 +52,7 @@ public class OrderService {
             Long id = productInfo.getProductId();
             Optional<Product> optionaProduct= productRepository.findById(id);
             if (!optionaProduct.isPresent()) {
-                throw new Exception("Product not found");
+                throw new GeneralCustomApplicationException("Product not found");
             }
             
             Product product = optionaProduct.get();
@@ -59,4 +61,14 @@ public class OrderService {
         
         }
     }
+
+    public Long getMaxNumberOfOrders() {
+        return maxNumberOfOrders;
+    }
+
+    public void setMaxNumberOfOrders(Long maxNumberOfOrders) {
+        this.maxNumberOfOrders = maxNumberOfOrders;
+    }
+
+    
 }

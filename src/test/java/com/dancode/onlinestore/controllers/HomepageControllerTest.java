@@ -37,41 +37,39 @@ public class HomepageControllerTest {
     @InjectMocks
     HomepageController homepageController;
 
-
     @BeforeEach
     void setUp() {
-        //manual implementation of MockMVC to avoid load al the web Context of Spring
+        // manual implementation of MockMVC to avoid load al the web Context of Spring
         mockMvc = MockMvcBuilders.standaloneSetup(homepageController)
-                                    .setControllerAdvice(GlobalExceptionHandler.class)
-                                    .build();
+                .setControllerAdvice(GlobalExceptionHandler.class)
+                .build();
     }
 
     MockMvc mockMvc;
 
-
-    //getAllCategoriesName()
+    // getAllCategoriesName()
     @Test
-    void testGetAllCategoriesName() throws Exception{
+    void testGetAllCategoriesName() throws Exception {
         String categoriesNames = "toys, electronics, art, music, apparel, jewelry";
         /*
-            //--> direct aproach without simulates HTTP request and response
-            //given
-            given(productCategoryService.getAllCategoriesNames()).willReturn(categoriesNames);
+         * //--> direct aproach without simulates HTTP request and response
+         * //given
+         * given(productCategoryService.getAllCategoriesNames()).willReturn(
+         * categoriesNames);
+         * 
+         * //when
+         * String result = homepageController.getAllCategoriesName();
+         * 
+         * //then
+         * assertEquals(categoriesNames, result);
+         */
 
-            //when
-            String result = homepageController.getAllCategoriesName();
+        // --> using mockMVC(manual) to simulate HTTP request and response
 
-            //then
-            assertEquals(categoriesNames, result);
-        */
-
-
-        //--> using mockMVC(manual) to simulate HTTP request and response
-
-        //given
+        // given
         given(productCategoryService.getAllCategoriesNames()).willReturn(categoriesNames);
 
-        //when
+        // when
         mockMvc.perform(get("/categories"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(categoriesNames));
@@ -79,13 +77,13 @@ public class HomepageControllerTest {
     }
 
     @Test
-    void testGetAllCategoriesNameIsEmpty() throws Exception{
+    void testGetAllCategoriesNameIsEmpty() throws Exception {
 
-        //given
+        // given
         given(productCategoryService.getAllCategoriesNames())
-        .willReturn("");
+                .willReturn("");
 
-        //when
+        // when
         mockMvc.perform(get("/categories"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(result -> {
@@ -97,60 +95,61 @@ public class HomepageControllerTest {
                 });
     }
 
-
-    //getDealProducts()
+    // getDealProducts()
     @Test
     void testGetDealProducts() throws Exception {
-        //given
+        // given
         List<Product> products = List.of(
-            new Product(Long.valueOf(10l),"quest","to play","virtual reality glasses",Float.valueOf(10f),"toys",Boolean.valueOf(true)),
-            new Product(Long.valueOf(11l),"some","to play","virtual reality glasses",Float.valueOf(10f),"toys",Boolean.valueOf(true))
-        );
-        
+                new Product(Long.valueOf(10l), "quest", "to play", "virtual reality glasses", Float.valueOf(10f),
+                        "toys", Boolean.valueOf(true)),
+                new Product(Long.valueOf(11l), "some", "to play", "virtual reality glasses", Float.valueOf(10f), "toys",
+                        Boolean.valueOf(true)));
+
         given(productService.getDealProducts(anyLong())).willReturn(products);
 
-        //when
+        // when
         mockMvc.perform(get("/deals_of_the_day/2")
-                    .contentType(APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.products.length()").value(products.size()))
-            .andExpect(jsonPath("$").isMap());
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.products.length()").value(products.size()))
+                .andExpect(jsonPath("$").isMap());
     }
 
     @Test
     void testGetDealProductsIsEmpty() throws Exception {
-        //given
-    
+        // given
+
         given(productService.getDealProducts(anyLong())).willReturn(List.of());
 
-        //when
+        // when
         mockMvc.perform(get("/deals_of_the_day/2"))
-            .andExpect(status().isInternalServerError())
-            .andExpect(result -> {
-                if (result.getResolvedException() instanceof GeneralCustomApplicationException) {
-                    assertEquals("not deals products", result.getResolvedException().getMessage());
-                } else {
-                    throw new AssertionError("Se esperaba una GeneralCustomApplicationException");
-                }
-            });
+                .andExpect(status().isInternalServerError())
+                .andExpect(result -> {
+                    if (result.getResolvedException() instanceof GeneralCustomApplicationException) {
+                        assertEquals("not deals products", result.getResolvedException().getMessage());
+                    } else {
+                        throw new AssertionError("Se esperaba una GeneralCustomApplicationException");
+                    }
+                });
     }
 
-    //getProductsByCategory()
+    // getProductsByCategory()
 
     @Test
     void testGetProductsByCategory() throws Exception {
-        //given
+        // given
         List<Product> products = List.of(
-            new Product(Long.valueOf(10l),"quest","to play","virtual reality glasses",Float.valueOf(10f),"toys",Boolean.valueOf(true)),
-            new Product(Long.valueOf(11l),"some","to play","virtual reality glasses",Float.valueOf(10f),"toys",Boolean.valueOf(true))
-        );
+                new Product(Long.valueOf(10l), "quest", "to play", "virtual reality glasses", Float.valueOf(10f),
+                        "toys", Boolean.valueOf(true)),
+                new Product(Long.valueOf(11l), "some", "to play", "virtual reality glasses", Float.valueOf(10f), "toys",
+                        Boolean.valueOf(true)));
 
         given(productService.getProductsByCategory(anyString())).willReturn(products);
 
-        //when
+        // when
         mockMvc.perform(get("/products/category")
-                        .param("category", "toys")
-                        .contentType(APPLICATION_JSON))
+                .param("category", "toys")
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.products.length()").value(products.size()))
                 .andExpect(jsonPath("$").isMap());
@@ -158,14 +157,14 @@ public class HomepageControllerTest {
 
     @Test
     void testGetProductsByCategoryIsEmpty() throws Exception {
-        //given
+        // given
 
         given(productService.getProductsByCategory(anyString())).willReturn(List.of());
 
-        //when
+        // when
         mockMvc.perform(get("/products/category")
-                        .param("category", "toys")
-                        .contentType(APPLICATION_JSON))
+                .param("category", "toys")
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
                 .andExpect(result -> {
                     if (result.getResolvedException() instanceof GeneralCustomApplicationException) {
@@ -176,22 +175,22 @@ public class HomepageControllerTest {
                 });
     }
 
-
-    //getAllProducts()
+    // getAllProducts()
 
     @Test
     void testGetAllProducts() throws Exception {
-         //given
-         List<Product> products = List.of(
-            new Product(Long.valueOf(10l),"quest","to play","virtual reality glasses",Float.valueOf(10f),"toys",Boolean.valueOf(true)),
-            new Product(Long.valueOf(11l),"some","to play","virtual reality glasses",Float.valueOf(10f),"toys",Boolean.valueOf(true))
-        );
+        // given
+        List<Product> products = List.of(
+                new Product(Long.valueOf(10l), "quest", "to play", "virtual reality glasses", Float.valueOf(10f),
+                        "toys", Boolean.valueOf(true)),
+                new Product(Long.valueOf(11l), "some", "to play", "virtual reality glasses", Float.valueOf(10f), "toys",
+                        Boolean.valueOf(true)));
 
-        //when
+        // when
         given(productService.getAllProducts()).willReturn(products);
 
         mockMvc.perform(get("/products")
-                        .contentType(APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.products.length()").value(products.size()))
                 .andExpect(jsonPath("$").isMap());
@@ -199,13 +198,13 @@ public class HomepageControllerTest {
 
     @Test
     void testGetAllProductsIsEmpty() throws Exception {
-        //given
+        // given
 
         given(productService.getAllProducts()).willReturn(List.of());
 
-        //when
+        // when
         mockMvc.perform(get("/products")
-                        .contentType(APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
                 .andExpect(result -> {
                     if (result.getResolvedException() instanceof GeneralCustomApplicationException) {
